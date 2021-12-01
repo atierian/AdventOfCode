@@ -3,6 +3,7 @@ import Foundation
 
 let input = DayOne.input
 
+// MARK: Generic Types / Helpers
 struct Reducing<T, U> {
     let reduce: (T, U) -> T
 
@@ -24,19 +25,23 @@ extension Array {
     }
 }
 
-// Part 1
+// MARK: Part 1
 let depthIncrease = Reducing<Store<Int, Int>, Int>.init { store, element in
     element > store.previousElement
     ? .init(value: store.value + 1, previousElement: element)
     : .init(value: store.value, previousElement: element)
 }
 
-let solution = input
+let partOnesolution = input
     .reduce(Store(value: 0, previousElement: Int.max), depthIncrease)
     .value
 
+// MARK: Part 1 Simple Alternative
+let solutionAlt = zip(input, input.dropFirst())
+    .filter(<)
+    .count
 
-// Part 2
+// MARK: Part 2
 extension Array {
     func windowChunked(by n: Int) -> [[Element]] {
         (0...count - n).map {
@@ -52,3 +57,8 @@ let windowedDepthIncrease = depthIncrease.pullback { (array: [Int]) in
 let partTwoSolution = input.windowChunked(by: 3)
     .reduce(Store(value: 0, previousElement: Int.max), windowedDepthIncrease)
     .value
+
+// MARK: Part 2 Simple Alternative
+let partTwoSolutionAlt = zip(input, input.dropFirst(3))
+    .filter(<)
+    .count
