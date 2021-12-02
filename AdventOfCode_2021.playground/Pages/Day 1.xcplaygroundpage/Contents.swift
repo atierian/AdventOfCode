@@ -3,28 +3,6 @@ import Foundation
 
 let input = DayOne.input
 
-// MARK: Generic Types / Helpers
-struct Reducing<T, U> {
-    let reduce: (T, U) -> T
-
-    func pullback<V>(_ f: (@escaping (V) -> U)) -> Reducing<T, V> {
-        Reducing<T, V> { store, element in
-            reduce(store, f(element))
-        }
-    }
-}
-
-struct Store<T, U> {
-    let value: T
-    let previousElement: U
-}
-
-extension Array {
-    func reduce<T>(_ initial: T, _ reduction: Reducing<T, Element>) -> T {
-        reduce(initial, reduction.reduce)
-    }
-}
-
 // MARK: Part 1
 let depthIncrease = Reducing<Store<Int, Int>, Int>.init { store, element in
     element > store.previousElement
