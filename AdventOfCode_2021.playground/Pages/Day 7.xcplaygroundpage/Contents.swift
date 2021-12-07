@@ -7,9 +7,9 @@ let positions = DaySeven
     .compactMap(Int.init)
     .sorted()
 
-
 // MARK: Part One
-let median = positions[positions.count/2]
+let medianIndex = Int(ceil(Double(positions.count/2)))
+let median = positions[medianIndex]
 
 func fuelConsumption(_ median: Int) -> Reducing<UInt, Int> {
     Reducing { $0 + $1.distance(to: median).magnitude }
@@ -17,7 +17,6 @@ func fuelConsumption(_ median: Int) -> Reducing<UInt, Int> {
 
 let partOne = positions
     .reduce(0, fuelConsumption(median))
-
 
 // MARK: Part Two
 let mean = positions
