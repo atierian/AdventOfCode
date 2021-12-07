@@ -9,7 +9,6 @@ let positions = DaySeven
 
 
 // MARK: Part One
-
 let median = positions[positions.count/2]
 
 func fuelConsumption(_ median: Int) -> Reducing<UInt, Int> {
@@ -21,7 +20,6 @@ let partOne = positions
 
 
 // MARK: Part Two
-
 let mean = positions
     .reduce(0, +) / positions.count
 
@@ -34,7 +32,3 @@ func incrementalFuelConsumption(mean: Int) -> Reducing<Int, Int> {
 
 let partTwo = positions
     .reduce(0, incrementalFuelConsumption(mean: mean))
-
-
-
-
