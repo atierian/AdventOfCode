@@ -25,11 +25,7 @@ let partOne = fish
     .map { growth(parentAge: $0, days: 80, cache: &newBorn) }
     .reduce(0, +)
 
-print(partOne)
-
 let partTwo = fish
     .lazy
     .map { growth(parentAge: $0, days: 256, cache: &newBorn) }
     .reduce(0, +)
-
-print(partTwo)
