@@ -41,7 +41,7 @@ let partTwoScoreLookup: [Character: Int] = [
 func autocompleteReduce(
     _ lookup: [Character: Int]
 ) -> Reducing<Int, Character> {
-    .init { $0 * 5 + lookup[$1]! }
+    .init { $0 * 5 + (lookup[$1] ?? 0) }
 }
 
 let partTwoValues = DayTen.input
