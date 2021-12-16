@@ -31,28 +31,30 @@ let partOne = DayTen.input
     .reduce(0, errorReduce(errorScoreLookup))
 
 // MARK: Part Twp
-let partTwoScoreLookup: [Character: Int] = [
-    ")": 1,
-    "]": 2,
-    "}": 3,
-    ">": 4
-]
+func partTwoTransform(_ value: [Character]) -> Int {
+    let partTwoScoreLookup: [Character: Int] = [
+        ")": 1,
+        "]": 2,
+        "}": 3,
+        ">": 4
+    ]
 
-func autocompleteReduce(
-    _ lookup: [Character: Int]
-) -> Reducing<Int, Character> {
-    .init { $0 * 5 + (lookup[$1] ?? 0) }
+    func autocompleteReduce(
+        _ lookup: [Character: Int]
+    ) -> Reducing<Int, Character> {
+        .init { $0 * 5 + (lookup[$1] ?? 0) }
+    }
+
+    return value
+        .compactMap { validPairs[$0] }
+        .reduce(0, autocompleteReduce(partTwoScoreLookup))
 }
 
 let partTwoValues = DayTen.input
     .components(separatedBy: .newlines)
     .map(Array.init)
     .compactMap(balancer.autocomplete)
-    .map {
-        $0.reversed()
-            .compactMap { validPairs[$0] }
-            .reduce(0, autocompleteReduce(partTwoScoreLookup))
-    }
+    .map(partTwoTransform)
     .sorted()
 
 let partTwo = partTwoValues[partTwoValues.count / 2]

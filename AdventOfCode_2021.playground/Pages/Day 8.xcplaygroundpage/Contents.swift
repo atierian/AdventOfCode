@@ -43,7 +43,6 @@ let knownDigitSet: Set<Int> = [2, 3, 4, 7] // Represents digits [1, 4, 7, 8]
 let partOne = lines
     .reduce(0, reduce(for: knownDigitSet))
 
-print(partOne)
 
 // MARK: Part 2
 
