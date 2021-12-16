@@ -19,18 +19,29 @@ struct Packet {
 
 extension Packet {
     static func literal(_ bits: inout ArraySlice<Bool>, version: Int) -> Packet {
-        var value = [Bool]()
-        var nonFinalGroup = true
-        while nonFinalGroup {
-            let chunk = bits.removeFirst(5)
-            value.append(contentsOf: chunk.suffix(4))
-            nonFinalGroup = chunk[0] == true
-        }
+        let value = bits
+            .chunk(in: 5, while: { $0[0] })
+            .flatMap { $0.suffix(4) }
+            .intValue
+
         return Packet(
             header: Header(version: version, typeID: 4),
-            value: value.intValue,
+            value: value,
             subPackets: []
         )
+    }
+}
+
+extension ArraySlice {
+    mutating func chunk(in c: Int, while shouldContinue: (_ chunk: [Element]) -> Bool) -> [[Element]] {
+        var chunks = [[Element]]()
+        var condition = true
+        while condition {
+            let chunk = removeFirst(c)
+            chunks.append(chunk)
+            condition = shouldContinue(chunk)
+        }
+        return chunks
     }
 }
 
