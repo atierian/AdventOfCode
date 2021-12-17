@@ -1,8 +1,7 @@
 import Foundation
 
 // MARK: Common
-let digitSet = Set("-123456789")
-let targetAreaSplit: (Character) -> Bool = { !digitSet.contains($0) }
+let targetAreaSplit: (Character) -> Bool = { !Set("-123456789").contains($0) }
 
 let numbers = DaySeventeen.input
     .split(whereSeparator: targetAreaSplit)
@@ -23,28 +22,37 @@ extension SignedNumeric where Self: Comparable {
     }
 }
 
-let xMin = (0...xTarget.lowerBound)
-    .first(where: { triangle($0) >= xTarget.lowerBound })!
-let xVelocityRange = xMin...xTarget.upperBound
+let xDistance: (Int, Int) -> Int = {
+    triangle($0) - triangle(max(0, $0 - $1))
+}
 
-var distinctInitialVelocities = 0
-for xVelocity in xVelocityRange {
-    let yVelocityRange = xVelocity < xTarget.upperBound
-    ? yTarget.lowerBound.absoluteRange
-    : yTarget.lowerBound...0
-    for yVelocity in yVelocityRange {
-        var xPostion = 0, yPosition = 0
-        var xVelocity = xVelocity, yVelocity = yVelocity
-        while xPostion <= xTarget.upperBound, yPosition >= yTarget.lowerBound {
-            xPostion += xVelocity
-            yPosition += yVelocity
-            xVelocity -= xVelocity.signum()
-            yVelocity -= 1
-            if xTarget ~= xPostion && yTarget ~= yPosition {
-                distinctInitialVelocities += 1
+var minX = xTarget.lowerBound - 1
+var maxX = xTarget.upperBound
+var distinctVelocities = 0
+
+for targetY in yTarget.lowerBound.absoluteRange {
+    var velocityY = targetY < 0 ? targetY : -targetY - 1
+    var y = 0
+    var velocities = Int.max
+
+    for i in (targetY < 0 ? 1 : 2 * targetY + 2)... {
+        y += velocityY
+        velocityY -= 1
+        if y < yTarget.lowerBound { break }
+        if y <= yTarget.upperBound {
+            while xDistance(minX, i) >= xTarget.lowerBound {
+                minX -= 1
             }
+
+            while xDistance(maxX, i) > xTarget.upperBound {
+                maxX -= 1
+            }
+
+            distinctVelocities += min(maxX, velocities) - minX
+            velocities = minX
+
         }
     }
 }
 
-let partTwo = distinctInitialVelocities
+let partTwo = distinctVelocities
